@@ -1,3 +1,5 @@
+[![Go](https://github.com/govindkailas/go-watermark/actions/workflows/go.yml/badge.svg)](https://github.com/govindkailas/go-watermark/actions/workflows/go.yml)
+
 # Example
 
 - add the image on assets folder
