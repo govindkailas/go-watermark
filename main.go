@@ -26,7 +26,7 @@ func main() {
 	imgSize := img.Bounds().Size()
 
 	// create a string watermark with a name
-	watermark := createWatermark("César O. Araújo", imgSize.X, imgSize.Y)
+	watermark := createWatermark("Govind Kailas", imgSize.X, imgSize.Y)
 
 	// Add the overlay to the background image with 50% opacity
 	result := imaging.Overlay(img, watermark, image.Point{0, 0}, 0.5)
