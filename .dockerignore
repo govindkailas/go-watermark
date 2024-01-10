@@ -1,0 +1,6 @@
+assets
+.github
+.git
+*.md
+*.jpg
+*k8s*.yml
