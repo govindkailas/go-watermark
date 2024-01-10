@@ -28,7 +28,7 @@ func main() {
 	})
 
 	// Handler for the healthcheck
-	router.GET("/healthz", func(c *gin.Context) {
+	router.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "OK"})
 	})
 
@@ -76,6 +76,7 @@ func main() {
 		return
 
 	})
+	router.Run() // listen and serve on 0.0.0.0:8080
 
 	// Open the background image to add the watermark
 	// img, err := imaging.Open("./assets/sample-1.jpeg")
