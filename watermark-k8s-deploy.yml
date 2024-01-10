@@ -12,14 +12,17 @@ spec:
         app: add-watermark
     spec:
       containers:
-      - name: add-watermark
-        image: ghcr.io/govindkailas/go-watermark:add-gin-router
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-        ports:
-        - containerPort: 8080
+        - name: add-watermark
+          image: ghcr.io/govindkailas/go-watermark:add-gin-router
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+            requests:
+              memory: "128Mi"
+              cpu: 100m 
+          ports:
+          - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
