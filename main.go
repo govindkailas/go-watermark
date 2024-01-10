@@ -39,8 +39,10 @@ func main() {
 		text := c.PostForm("text")
 
 		// Download the image from the URL
+		log.Println("Downloading the image from", url)
 		resp, err := http.Get(url)
 		if err != nil {
+			log.Println("Failed to download the image", err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to download the image"})
 			return
 		}
@@ -49,6 +51,7 @@ func main() {
 		// Decode the image
 		img, err := imaging.Decode(resp.Body)
 		if err != nil {
+			log.Println("Failed to decode the image", err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to decode the image"})
 			return
 		}
@@ -56,6 +59,7 @@ func main() {
 		imgSize := img.Bounds().Size()
 
 		// create a string watermark with a name
+		log.Println("Creating the watermark on image with text", text)
 		watermark := createWatermark(text, imgSize.X, imgSize.Y)
 
 		// Add the overlay to the background image with 50% opacity
