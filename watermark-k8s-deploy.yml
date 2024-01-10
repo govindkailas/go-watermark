@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: add-watermark
+spec:
+  selector:
+    matchLabels:
+      app: add-watermark
+  template:
+    metadata:
+      labels:
+        app: add-watermark
+    spec:
+      containers:
+      - name: add-watermark
+        image: ghcr.io/govindkailas/go-watermark:add-gin-router
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: add-watermark-svc
+spec:
+  selector:
+    app: add-watermark
+  ports:
+  - port: 80
+    targetPort: 8080
+  # expose as loadbalancer 
+  type: LoadBalancer
+        
