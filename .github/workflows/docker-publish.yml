@@ -7,11 +7,11 @@ name: Docker
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
     paths:
-      - '**.go'
+      - '**.go'  
   pull_request:
     branches: [ "main" ]
     paths-ignore:
