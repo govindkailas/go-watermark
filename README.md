@@ -1,4 +1,5 @@
 [![Go](https://github.com/govindkailas/go-watermark/actions/workflows/go.yml/badge.svg)](https://github.com/govindkailas/go-watermark/actions/workflows/go.yml)
+[![Docker](https://github.com/govindkailas/go-watermark/actions/workflows/docker-publish.yml/badge.svg?branch=main)](https://github.com/govindkailas/go-watermark/actions/workflows/docker-publish.yml)
 
 # Example
 
