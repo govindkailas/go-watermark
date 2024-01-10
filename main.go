@@ -76,30 +76,7 @@ func main() {
 		return
 
 	})
-	router.Run() // listen and serve on 0.0.0.0:8080
-
-	// Open the background image to add the watermark
-	// img, err := imaging.Open("./assets/sample-1.jpeg")
-	// if err != nil {
-	// 	log.Fatalf("Failed to open: %s", err)
-	// }
-
-	// // image size
-	// imgSize := img.Bounds().Size()
-
-	// // create a string watermark with a name
-	// watermark := createWatermark("Govind Kailas", imgSize.X, imgSize.Y)
-
-	// // Add the overlay to the background image with 50% opacity
-	// result := imaging.Overlay(img, watermark, image.Point{0, 0}, 0.5)
-
-	// // Save the result image to file
-	// thirdImage, err := os.Create("image-with-overlay.jpg")
-	// if err != nil {
-	// 	log.Fatalf("Failed to create: %s", err)
-	// }
-	// jpeg.Encode(thirdImage, result, &jpeg.Options{Quality: 100})
-	// defer thirdImage.Close()
+	router.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
 func createWatermark(name string, bgWidth, bgHeight int) *image.RGBA {
