@@ -6,9 +6,11 @@ import (
 	"image/draw"
 	"image/jpeg"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/disintegration/imaging"
+	"github.com/gin-gonic/gin"
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/gofont/goregular"
@@ -16,6 +18,55 @@ import (
 )
 
 func main() {
+
+	// Create a new gin router
+	router := gin.Default()
+
+	// Define a handler function to handle the watermark request
+	router.POST("/watermark", func(c *gin.Context) {
+		// Get the input parameters from the request
+		url := c.PostForm("url")
+		text := c.PostForm("text")
+
+		// Download the image from the URL
+		resp, err := http.Get(url)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to download the image"})
+			return
+		}
+		defer resp.Body.Close()
+
+		// Decode the image
+		img, err := imaging.Decode(resp.Body)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to decode the image"})
+			return
+		}
+		// image size
+		imgSize := img.Bounds().Size()
+
+		// create a string watermark with a name
+		watermark := createWatermark(text, imgSize.X, imgSize.Y)
+
+		// Add the overlay to the background image with 50% opacity
+		result := imaging.Overlay(img, watermark, image.Point{0, 0}, 0.5)
+
+		// Save the result image to file
+		thirdImage, err := os.Create("image-with-overlay.jpg")
+		if err != nil {
+			log.Fatalf("Failed to create: %s", err)
+		}
+		jpeg.Encode(thirdImage, result, &jpeg.Options{Quality: 100})
+		defer thirdImage.Close()
+
+		// Send the result image to the client
+		c.Header("Content-Type", "image/jpeg")
+		c.File("image-with-overlay.jpg")
+		defer os.Remove("image-with-overlay.jpg")
+		return
+
+	})
+
 	// Open the background image to add the watermark
 	img, err := imaging.Open("./assets/sample-1.jpeg")
 	if err != nil {
