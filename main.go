@@ -22,6 +22,16 @@ func main() {
 	// Create a new gin router
 	router := gin.Default()
 
+	//Handler for the root path
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Hello and welcome to the watermark app, hit the /watermark for more!"})
+	})
+
+	// Handler for the healthcheck
+	router.GET("/healthz", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "OK"})
+	})
+
 	// Define a handler function to handle the watermark request
 	router.POST("/watermark", func(c *gin.Context) {
 		// Get the input parameters from the request
