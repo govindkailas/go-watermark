@@ -7,9 +7,9 @@ name: Docker
 
 on:
   push:
-    branches: [ "**" ]
-    paths:
-      - '**.go'  
+    branches: [ "*" ]
+    paths-ignore:
+        - '*.md' 
   pull_request:
     branches: [ "main" ]
     paths-ignore:
