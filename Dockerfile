@@ -1,7 +1,7 @@
 FROM golang:1.21-alpine AS build
 COPY  . /app
 WORKDIR /app
-RUN go build -o go-watermark-app
+RUN CGO_ENABLED=0 GOOS=linux go build -o go-watermark-app
 
 FROM alpine:latest
 COPY --from=build /app/go-watermark-app .
