@@ -23,14 +23,14 @@ func main() {
 	router := gin.Default()
 
 	//Handler for the root path
-	router.GET("/", handleIndex) 
+	router.GET("/", handleIndex)
 
 	// Handler for the healthcheck
 	router.GET("/health", handleHealth)
 
 	// Define a handler function to handle the watermark request
-	router.POST("/watermark", handleWatermark) 
-	router.Run(":8080") 
+	router.POST("/watermark", handleWatermark)
+	router.Run("0.0.0.0:8080")
 }
 
 func handleIndex(c *gin.Context) {
@@ -43,59 +43,59 @@ func handleHealth(c *gin.Context) {
 
 func handleWatermark(c *gin.Context) {
 	url := c.PostForm("url")
-		//check if the url is empty
-		if url == "" {
-			log.Println("The form url is empty")
-			c.JSON(http.StatusBadRequest, gin.H{"error": "The form url is empty"})
-			return
-		}
-		text := c.PostForm("text")
-		if text == "" {
-			log.Println("The form watrmark text is empty")
-			c.JSON(http.StatusBadRequest, gin.H{"error": "The form watermark text is empty"})
-			return
-		}
-
-		// Download the image from the URL
-		log.Println("Downloading the image from", url)
-		resp, err := http.Get(url)
-		if err != nil {
-			log.Println("Failed to download the image", err)
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to download the image"})
-			return
-		}
-		defer resp.Body.Close()
-
-		// Decode the image
-		img, err := imaging.Decode(resp.Body)
-		if err != nil {
-			log.Println("Failed to decode the image", err)
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to decode the image"})
-			return
-		}
-		// image size
-		imgSize := img.Bounds().Size()
-
-		// create a string watermark with a name
-		log.Println("Creating the watermark on image with text", text)
-		watermark := createWatermark(text, imgSize.X, imgSize.Y)
-
-		// Add the overlay to the background image with 50% opacity
-		result := imaging.Overlay(img, watermark, image.Point{0, 0}, 0.5)
-
-		// Save the result image to file
-		thirdImage, err := os.Create("image-with-overlay.jpg")
-		if err != nil {
-			log.Fatalf("Failed to create: %s", err)
-		}
-		jpeg.Encode(thirdImage, result, &jpeg.Options{Quality: 100})
-		defer thirdImage.Close()
-
-		// Send the result image to the client
-		c.Header("Content-Type", "image/jpeg")
-		c.File("image-with-overlay.jpg")
-		defer os.Remove("image-with-overlay.jpg")
+	//check if the url is empty
+	if url == "" {
+		log.Println("The form url is empty")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "The form url is empty"})
 		return
+	}
+	text := c.PostForm("text")
+	if text == "" {
+		log.Println("The form watrmark text is empty")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "The form watermark text is empty"})
+		return
+	}
+
+	// Download the image from the URL
+	log.Println("Downloading the image from", url)
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Println("Failed to download the image", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to download the image"})
+		return
+	}
+	defer resp.Body.Close()
+
+	// Decode the image
+	img, err := imaging.Decode(resp.Body)
+	if err != nil {
+		log.Println("Failed to decode the image", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to decode the image"})
+		return
+	}
+	// image size
+	imgSize := img.Bounds().Size()
+
+	// create a string watermark with a name
+	log.Println("Creating the watermark on image with text", text)
+	watermark := createWatermark(text, imgSize.X, imgSize.Y)
+
+	// Add the overlay to the background image with 50% opacity
+	result := imaging.Overlay(img, watermark, image.Point{0, 0}, 0.5)
+
+	// Save the result image to file
+	thirdImage, err := os.Create("image-with-overlay.jpg")
+	if err != nil {
+		log.Fatalf("Failed to create: %s", err)
+	}
+	jpeg.Encode(thirdImage, result, &jpeg.Options{Quality: 100})
+	defer thirdImage.Close()
+
+	// Send the result image to the client
+	c.Header("Content-Type", "image/jpeg")
+	c.File("image-with-overlay.jpg")
+	defer os.Remove("image-with-overlay.jpg")
+	return
 }
 func createWatermark(name string, bgWidth, bgHeight int) *image.RGBA {
 	// Create a new RGBA image

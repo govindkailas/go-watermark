@@ -33,7 +33,7 @@ spec:
   selector:
     app: add-watermark
   ports:
-  - port: 80
+  - port: 8080
     targetPort: 8080
   # expose as loadbalancer 
   type: LoadBalancer ## change here as per your cluster setup
