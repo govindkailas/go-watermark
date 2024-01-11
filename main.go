@@ -23,20 +23,38 @@ func main() {
 	router := gin.Default()
 
 	//Handler for the root path
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "Hello and welcome to the watermark app, hit the /watermark for more!"})
-	})
+	router.GET("/", handleIndex) 
 
 	// Handler for the healthcheck
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "OK"})
-	})
+	router.GET("/health", handleHealth)
 
 	// Define a handler function to handle the watermark request
-	router.POST("/watermark", func(c *gin.Context) {
-		// Get the input parameters from the request
-		url := c.PostForm("url")
+	router.POST("/watermark", handleWatermark) 
+	router.Run(":8080") 
+}
+
+func handleIndex(c *gin.Context) {
+	c.JSON(200, gin.H{"message": "Hello and welcome to the watermark app, hit the /watermark for more!"})
+}
+
+func handleHealth(c *gin.Context) {
+	c.JSON(200, gin.H{"status": "OK"})
+}
+
+func handleWatermark(c *gin.Context) {
+	url := c.PostForm("url")
+		//check if the url is empty
+		if url == "" {
+			log.Println("The form url is empty")
+			c.JSON(http.StatusBadRequest, gin.H{"error": "The form url is empty"})
+			return
+		}
 		text := c.PostForm("text")
+		if text == "" {
+			log.Println("The form watrmark text is empty")
+			c.JSON(http.StatusBadRequest, gin.H{"error": "The form watermark text is empty"})
+			return
+		}
 
 		// Download the image from the URL
 		log.Println("Downloading the image from", url)
@@ -78,11 +96,7 @@ func main() {
 		c.File("image-with-overlay.jpg")
 		defer os.Remove("image-with-overlay.jpg")
 		return
-
-	})
-	router.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
-
 func createWatermark(name string, bgWidth, bgHeight int) *image.RGBA {
 	// Create a new RGBA image
 	img := image.NewRGBA(image.Rect(0, 0, bgWidth, bgHeight))
