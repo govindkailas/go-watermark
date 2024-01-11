@@ -17,7 +17,7 @@ Use the branch `add-gin-router` to see the example with Gin Router microservice.
 Post the image url and watermark text as a form data to the endpoint.
 
 ```
-git clone -b add-gin-router https://github.com/govindkailas/go-watermark
+git clone -b add-gin-router https://github.com/govindkailas/go-watermark.git
 ```
 
 Once the app is up, try running the following curl command to see the health
