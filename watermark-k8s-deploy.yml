@@ -36,5 +36,5 @@ spec:
   - port: 80
     targetPort: 8080
   # expose as loadbalancer 
-  type: LoadBalancer
+  type: LoadBalancer ## change here as per your cluster setup
         
