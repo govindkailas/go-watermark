@@ -27,7 +27,7 @@ Once the app is up, try running the following curl command to see the health
 curl --request POST \
   --url http://127.0.0.1:8080/watermark \
   --header 'content-type: multipart/form-data' \
-  --form url=https://upload.wikimedia.org/wikipedia/commons/8/8d/Bicycle_at_evening_sunset.jpg \
+  --form url=https://www.pitara.com/media/mango.jpg \
   --form text=MyWaterMark@2024
 ```
 
